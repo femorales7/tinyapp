@@ -16,5 +16,8 @@
   "bugs": {
     "url": "https://github.com/femorales7/tinyapp/issues"
   },
-  "homepage": "https://github.com/femorales7/tinyapp#readme"
+  "homepage": "https://github.com/femorales7/tinyapp#readme",
+  "dependencies": {
+    "express": "^4.18.2"
+  }
 }
