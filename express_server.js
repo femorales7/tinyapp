@@ -57,6 +57,12 @@ app.post("/urls", (req, res) => {
   res.redirect(`/urls/${shortURL}`);
 });
 
+app.post("/urls/:id/delete", (req, res)=> {
+  const id = req.params.id;
+  delete urlDatabase[id]
+  res.redirect("/urls");
+})
+
 
 // listen of our server
 app.listen(PORT, () => {
