@@ -25,8 +25,9 @@
           <tr>
             <th scope="col">Short URL ID</th>
             <th scope="col">Long URL</th>
-            <th scope="col">Action</th>
-          </tr>
+            <th scope="col">Edit</th>
+            <th scope="col">Delete</th>
+            </tr>
         </thead>
         <tbody>
           <% for (let id in urls) { %>
@@ -34,7 +35,12 @@
               <td><%= id %></td>
               <td><%= urls[id] %></td>
               <td>
-                <form method="POST" action="/urls/<%=id%>/delete" style="display: inline-block;">
+                <form method="GET" action="/urls/<%=id%>" class="form-inline" ">
+                <button type="submit" class="btn btn-primary">Edit</button>
+              </form>
+            </td>
+              <td>
+                <form method="POST" action="/urls/<%=id%>/delete" class="form-inline" ">
                 <button type="submit" class="btn btn-primary">Delete</button>
               </form>
             </td>

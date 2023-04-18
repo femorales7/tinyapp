@@ -62,7 +62,20 @@ app.post("/urls/:id/delete", (req, res)=> {
   delete urlDatabase[id]
   res.redirect("/urls");
 })
-
+// app.get("/urls:id/edit", (req, res) => {
+//   const templateVars = { urls: urlDatabase };
+//   res.render("urls_index", templateVars);
+// });
+app.post("/urls/:id/edit", (req, res) => {
+  console.log(req.body); // Log the POST request body to the console
+  //res.send("Ok"); // Respond with 'Ok' (we will replace this)
+  const id = req.params.id;
+  console.log(id)
+  const longURL = req.body.longURL;  
+  console.log(longURL)
+  urlDatabase[id] = longURL;
+  res.redirect("/urls");
+});
 
 // listen of our server
 app.listen(PORT, () => {
