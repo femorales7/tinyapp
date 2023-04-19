@@ -100,6 +100,13 @@ app.post("/login", (req, res) => {
   res.redirect("/urls")
 
 })
+app.post("/logout", (req, res) => {
+  const username = req.body;
+  console.log(username);
+  res.clearCookie("username", username);
+  res.redirect("/urls")
+
+})
 
 // listen of our server
 app.listen(PORT, () => {
