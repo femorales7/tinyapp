@@ -58,21 +58,32 @@ app.get("/", (req, res) => {
   res.send("Hello!");
 });
 app.get("/urls", (req, res) => {
-  
+ const userId = req.cookies["userId"]
   const templateVars = { 
-    userId: req.cookies["userId"],
+    userId: userId,
     urls: urlDatabase };
-    console.log(templateVars)
+    //console.log(templateVars)
     const user = users[req.cookies["userId"]];
-    console.log(user)
+    //console.log(user)
+
+    if (!userId){
+      return res.status(400).send("The user don't have shorten URLs.");
+      
+    }
+    
   res.render("urls_index", {...templateVars,
     header: 'partials/_header', user});
 });
 app.get("/urls/new", (req, res) => {
+  const userId = req.cookies["userId"]
   const templateVars = { 
-    userId: req.cookies["userId"],
+    userId: userId,
     };
-    const user = users[req.cookies["userId"]];
+    const user = users[userId];
+    if (!userId){
+      return res.redirect("/login");
+      
+    }
   res.render("urls_new", { ...templateVars,
     header:'partials/_header', user}  );
 });
@@ -80,11 +91,15 @@ app.get("/urls/:id", (req, res) => {
   console.log(urlDatabase)
   const id = req.params.id;
   const longURL = urlDatabase[id];
+  const userId= req.cookies["userId"]
   const templateVars = { 
-    userId: req.cookies["userId"],
+    userId: userId,
     id,
     longURL, 
   };
+  if (!userId){
+    return res.redirect("/login");
+  }  
   const user = users[req.cookies["userId"]]
   res.render("urls_show", {
     ...templateVars,
@@ -118,6 +133,10 @@ app.get("/registration", (req, res) => {
 });
 
 app.get("/login", (req, res) => {
+  const userId = req.cookies["userId"];
+  if (userId){
+    return res.redirect("/urls");
+  } 
   const templateVars = { 
     userId: req.cookies["userId"],
     };  
@@ -129,6 +148,7 @@ app.get("/login", (req, res) => {
 });
 
 app.post("/login", (req, res) => {
+
    // pull the info off the body object
    const email = req.body.email;
    const password = req.body.password;
@@ -139,9 +159,11 @@ app.post("/login", (req, res) => {
   if (findUser.password !== password) {
     return res.status(400).send('passwords do not match');
   }
+  
   // set a cookie and redirect the user
   res.cookie('userId', findUser.id);
-
+  
+ 
   res.redirect('/urls');
 
 
@@ -168,7 +190,7 @@ app.post("/registration", (req, res) => {
   }
 
   users[userId]  = {id: userId, email: email, password: password}
-  console.log(users)
+  //console.log(users)
   
   res.cookie("userId", userId)
   res.redirect(`/urls`);
