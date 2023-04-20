@@ -30,21 +30,26 @@
             </tr>
         </thead>
         <tbody>
-          <% for (let id in urls) { %>
+          <% if (userUrl.length > 0) {%>
+          <% for (let i=0; i < userUrl.length; i++) { %>
             <tr>
-              <td><%= id %></td>
-              <td><%= urls[id] %></td>
+              <td><%= userUrl[i].id %></td>
+              <td><%= userUrl[i].longUrl %></td>
               <td>
-                <form method="GET" action="/urls/<%=id%>" class="form-inline" ">
+                <form method="GET" action="/urls/<%=userUrl[i].id%>" class="form-inline" ">
                 <button type="submit" class="btn btn-primary">Edit</button>
               </form>
             </td>
               <td>
-                <form method="POST" action="/urls/<%=id%>/delete" class="form-inline" ">
+                <form method="POST" action="/urls/<%=userUrl[i].id%>/delete" class="form-inline" ">
                 <button type="submit" class="btn btn-primary">Delete</button>
               </form>
             </td>
             </tr>
+          <% } %>
+          <% } else {%>
+            <td>"The user don't have Urls registred"</td>
+            <td>"The user don't have Urls registred"</td>
           <% } %>
         </tbody>
       </table>

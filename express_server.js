@@ -6,8 +6,14 @@ const cookieParser = require('cookie-parser')
 app.set("view engine", "ejs");
 
 const urlDatabase = {
-  "b2xVn2": "http://www.lighthouselabs.ca",
-  "9sm5xK": "http://www.google.com"
+  b6UTxQ: {
+    longURL: "https://www.tsn.ca",
+    userID: "aJ48lW",
+  },
+  i3BoGr: {
+    longURL: "https://www.google.ca",
+    userID: "aJ48lW",
+  },
 };
 
 const users = {
@@ -20,6 +26,11 @@ const users = {
     id: "user2RandomID",
     email: "user2@example.com",
     password: "dishwasher-funk",
+  },
+  aJ48lW: {
+    id: "aJ48lW",
+    email: "usera3@example.com",
+    password: "123456",
   },
 };
 // boddy parser library 
@@ -59,9 +70,21 @@ app.get("/", (req, res) => {
 });
 app.get("/urls", (req, res) => {
  const userId = req.cookies["userId"]
+ const userUrl = [];
+ for (const urlId in urlDatabase){
+    const url = urlDatabase[urlId]
+  if(url.userID === userId){
+    userUrl.push({id:urlId, longUrl: url.longURL})
+    
+  }
+  console.log(userUrl)
+  console.log(urlDatabase)
+
+ }
+ 
   const templateVars = { 
-    userId: userId,
-    urls: urlDatabase };
+    userId,
+    userUrl };
     //console.log(templateVars)
     const user = users[req.cookies["userId"]];
     //console.log(user)
@@ -90,12 +113,13 @@ app.get("/urls/new", (req, res) => {
 app.get("/urls/:id", (req, res) => {
   console.log(urlDatabase)
   const id = req.params.id;
-  const longURL = urlDatabase[id];
+  const longUrl = urlDatabase[id].longURL;
+  console.log(longUrl)
   const userId= req.cookies["userId"]
   const templateVars = { 
     userId: userId,
     id,
-    longURL, 
+    longUrl, 
   };
   if (!userId){
     return res.redirect("/login");
@@ -197,12 +221,20 @@ app.post("/registration", (req, res) => {
 });
 
 app.post("/urls", (req, res) => {
+  const userId = req.cookies["userId"];
+
   console.log(req.body); // Log the POST request body to the console
   //res.send("Ok"); // Respond with 'Ok' (we will replace this)
   const longURL = req.body.longURL;
   const shortURL = generateRandomString();
-  urlDatabase[shortURL] = longURL;
-  res.redirect(`/urls/${shortURL}`);
+  urlDatabase[shortURL] = {
+    longURL,
+    userID: userId
+  };
+  
+  console.log(urlDatabase)
+  
+  res.redirect(`/urls`);
 });
 
 
@@ -222,7 +254,7 @@ app.post("/urls/:id/edit", (req, res) => {
   console.log(id)
   const longURL = req.body.longURL;  
   console.log(longURL)
-  urlDatabase[id] = longURL;
+  urlDatabase[id].longURL = longURL;
   res.redirect("/urls");
 });
 
