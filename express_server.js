@@ -1,8 +1,11 @@
 const express = require("express");
+const morgan = require('morgan');
 const app = express();
 const PORT = 8080; // default port 8080
 const cookieParser = require('cookie-parser')
+const bcrypt = require('bcryptjs');
 
+// configuration
 app.set("view engine", "ejs");
 
 const urlDatabase = {
@@ -20,20 +23,22 @@ const users = {
   userRandomID: {
     id: "userRandomID",
     email: "user@example.com",
-    password: "purple-monkey-dinosaur",
+    password: "$2a$10$MmM6RsL7Sj4C5omPWxnxXey1qh4rJxiOzgomTX8eb.MvqKWBMZ/u2",
   },
   user2RandomID: {
     id: "user2RandomID",
     email: "user2@example.com",
-    password: "dishwasher-funk",
+    password: "$2a$10$MmM6RsL7Sj4C5omPWxnxXey1qh4rJxiOzgomTX8eb.MvqKWBMZ/u2",
   },
   aJ48lW: {
     id: "aJ48lW",
     email: "usera3@example.com",
-    password: "123456",
+    password: "$2a$10$MmM6RsL7Sj4C5omPWxnxXey1qh4rJxiOzgomTX8eb.MvqKWBMZ/u2",
   },
 };
 // boddy parser library 
+// middleware
+app.use(morgan('dev'));
 app.use(express.urlencoded({ extended: true }));//populate req.body
 app.use(cookieParser())
 
@@ -198,13 +203,21 @@ app.post("/login", (req, res) => {
    const email = req.body.email;
    const password = req.body.password;
    const findUser = getUserByEmail(email);
+
+   if (!email || !password) {
+    return res.status(400).send('Please provide an email AND a password');
+  }
+
    if(!findUser){
     return res.status(400).send("This email is not registred in our sistem");
   } 
-  if (findUser.password !== password) {
+ // does the provided password NOT match the one from the database
+ if (!bcrypt.compareSync(password, findUser.password)) {
+  // if (foundUser.password !== password) {
     return res.status(400).send('passwords do not match');
   }
   
+  //happy path! The user is who they say they are!
   // set a cookie and redirect the user
   res.cookie('userId', findUser.id);
   
@@ -225,17 +238,14 @@ app.post("/registration", (req, res) => {
     return res.status(403).send("This email is registred in our sistem");
   } 
  
-  if (!email){
-     res.status(400).send("Please enter a email").redirect("/user_registration");
+  if (!email || !password){
+     res.status(400).send("Please enter a email AND a password")
      
   };
+  const hash = bcrypt.hashSync(password, 10);
 
-  if (!password){
-    return res.status(403).send("Please enter a password");
-  }
-
-  users[userId]  = {id: userId, email: email, password: password}
-  //console.log(users)
+  users[userId]  = {id: userId, email: email, password: hash}
+  console.log(users)
   
   res.cookie("userId", userId)
   res.redirect(`/urls`);
