@@ -63,24 +63,28 @@ function getUserByEmail(email){
   return null;
 
 }
+function urlsForUser(id){
+const userUrl = [];
+for (const urlId in urlDatabase){
+   const url = urlDatabase[urlId]
+   console.log(url.userID , id)
+ if(url && url.userID === id){
+   userUrl.push({id:urlId, longUrl: url.longURL})
+   console.log(userUrl)
+ }
+}
+return userUrl;
+}
 
 // Routes of request
 app.get("/", (req, res) => {
   res.send("Hello!");
 });
 app.get("/urls", (req, res) => {
- const userId = req.cookies["userId"]
- const userUrl = [];
- for (const urlId in urlDatabase){
-    const url = urlDatabase[urlId]
-  if(url.userID === userId){
-    userUrl.push({id:urlId, longUrl: url.longURL})
-    
-  }
-  console.log(userUrl)
-  console.log(urlDatabase)
-
- }
+ const userId = req.cookies["userId"];
+ const userUrl = urlsForUser(userId);
+ console.log(userUrl)
+ console.log(userId)
  
   const templateVars = { 
     userId,
@@ -140,7 +144,7 @@ app.get("/hello", (req, res) => {
 
 app.get("/u/:id", (req, res) => {
   const id = req.params.id;
-  const longURL = urlDatabase[id];
+  const longURL = urlDatabase[id].longURL;
   if (longURL) {
     res.redirect(longURL);
   } else {
@@ -170,6 +174,23 @@ app.get("/login", (req, res) => {
   
   
 });
+
+app.get("/urls/:id/delete", (req, res) =>{
+  const userId = req.cookies["userId"];
+  const urlId = req.params.id;
+  console.log(urlId);
+  const userUrl = urlsForUser(userId) ;
+  if (!userId){
+    return res.status(403).send("The user does not logged");
+  } else if (urlDatabase[urlId].userID !== userId){
+    return res.status(403).send("The user does not own the URL.");
+  }
+  if (!userUrl[urlId]){
+    return res.status(403).send("The short URL does not exist");
+  }
+  
+
+})
 
 app.post("/login", (req, res) => {
 
