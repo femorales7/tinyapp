@@ -1,12 +1,13 @@
 # TinyApp Project
 
 TinyApp is a full stack web application built with Node and Express that allows users to shorten long URLs (à la bit.ly).
+This project has encrypted password security and encrypted cookies as well as a redirect if someone tries to enter without permissions.
 
 ## Final Product
 
-!["screenshot description"](docs\login.PNG)
-!["screenshot description"](docs\urls.PNG)
-!["screenshot description"](docs\edit.PNG)
+!["screenshot description"](https://github.com/femorales7/tinyapp/blob/master/docs/login.PNG)
+!["screenshot description"](https://github.com/femorales7/tinyapp/blob/master/docs/urls.PNG)
+!["screenshot description"](https://github.com/femorales7/tinyapp/blob/master/docs/edit.PNG)
 
 ## Dependencies
 
