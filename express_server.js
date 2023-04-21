@@ -88,6 +88,7 @@ app.get("/urls", (req, res) => {
     if (!userId){
     return res.redirect("/login");      
     }
+    console.log(users)
     
   res.render("urls_index", {...templateVars,
     header: 'partials/_header', user});
