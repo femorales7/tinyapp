@@ -5,9 +5,9 @@ This project has encrypted password security and encrypted cookies as well as a 
 
 ## Final Product
 
-!["screenshot description"](https://github.com/femorales7/tinyapp/blob/master/docs/login.PNG)
-!["screenshot description"](https://github.com/femorales7/tinyapp/blob/master/docs/urls.PNG)
-!["screenshot description"](https://github.com/femorales7/tinyapp/blob/master/docs/edit.PNG)
+!["Login page"](https://github.com/femorales7/tinyapp/blob/master/docs/login.PNG)
+!["URls page"](https://github.com/femorales7/tinyapp/blob/master/docs/urls.PNG)
+!["Edit page"](https://github.com/femorales7/tinyapp/blob/master/docs/edit.PNG)
 
 ## Dependencies
 
